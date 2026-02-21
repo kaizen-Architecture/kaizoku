@@ -26,7 +26,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const schema = z.object({
-  source: z.string().min(1, { message: 'You must select a source' }),
+  source: z.union([z.string().min(1, { message: 'You must select a source' }), z.array(z.string()).min(1)]),
   query: z.string().min(1, { message: 'Cannot be empty' }),
   mangaTitle: z.string().min(1, { message: 'Please select a manga' }),
   interval: z
@@ -113,7 +113,7 @@ export function AddMangaForm({ onClose }: { onClose: () => void }) {
       await mutation.mutateAsync({
         title: mangaTitle,
         interval,
-        source,
+        source: Array.isArray(source) ? source[0]! : source,
       });
     } catch (err) {
       showNotification({

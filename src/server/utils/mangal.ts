@@ -166,17 +166,23 @@ export const updateExistingMangaMetadata = async (libraryPath: string, title: st
   }
 };
 
-export const search = async (source: string, keyword: string): Promise<IOutput> => {
+export const search = async (source: string | string[], keyword: string): Promise<IOutput> => {
   try {
-    const { stdout, escapedCommand } = await execa('mangal', [
-      'inline',
-      '--source',
-      source,
-      '--include-anilist-manga',
-      '--query',
-      keyword,
-      '-j',
-    ]);
+    const args = ['inline', '--include-anilist-manga', '--query', keyword, '-j'];
+
+    if (source === 'all') {
+      // Omit --source to search all sources
+    } else if (Array.isArray(source)) {
+      source.forEach((s) => {
+        args.push('--source');
+        args.push(s);
+      });
+    } else {
+      args.push('--source');
+      args.push(source);
+    }
+
+    const { stdout, escapedCommand } = await execa('mangal', args);
     logger.info(`Search manga with following command: ${escapedCommand}`);
     return JSON.parse(stdout);
   } catch (err) {

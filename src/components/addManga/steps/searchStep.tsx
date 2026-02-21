@@ -65,6 +65,7 @@ export function SearchStep({ form }: { form: UseFormReturnType<FormType> }) {
           onSelect={(selected) => {
             if (selected) {
               form.setFieldValue('mangaTitle', selected.title);
+              form.setFieldValue('source', selected.source);
             } else {
               form.setFieldValue('mangaTitle', '');
             }

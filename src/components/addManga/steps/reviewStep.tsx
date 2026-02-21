@@ -34,12 +34,12 @@ export function ReviewStep({ form }: { form: UseFormReturnType<FormType> }) {
   const bindMutation = trpc.manga.bind.useMutation();
   const query = trpc.manga.detail.useQuery(
     {
-      source: form.values.source,
+      source: Array.isArray(form.values.source) ? form.values.source[0]! : form.values.source,
       title: form.values.mangaTitle,
     },
     {
       staleTime: Infinity,
-      enabled: !!form.values.source && !!form.values.mangaTitle,
+      enabled: !!form.values.source && !!form.values.mangaTitle && !Array.isArray(form.values.source),
     },
   );
 

@@ -85,7 +85,7 @@ export const mangaRouter = t.router({
     .input(
       z.object({
         keyword: z.string().trim().min(1),
-        source: z.string().trim().min(1),
+        source: z.union([z.string().trim().min(1), z.array(z.string().trim().min(1))]),
       }),
     )
     .query(async ({ input }) => {
@@ -95,6 +95,8 @@ export const mangaRouter = t.router({
         .map((m) => ({
           status: m.mangal.metadata.status,
           title: m.mangal.name,
+          source: m.source,
+          chapters: m.mangal.metadata.chapters || m.mangal.chapters?.length || 0,
           cover:
             m.mangal.metadata.cover?.extraLarge || m.mangal.metadata.cover?.large || m.mangal.metadata.cover?.medium,
         }))
@@ -201,17 +203,17 @@ export const mangaRouter = t.router({
               genres: mangaDetail.metadata.genres ? [...mangaDetail.metadata.genres] : [],
               startDate: mangaDetail.metadata.startDate
                 ? new Date(
-                    mangaDetail.metadata.startDate.year,
-                    mangaDetail.metadata.startDate.month,
-                    mangaDetail.metadata.startDate.day,
-                  )
+                  mangaDetail.metadata.startDate.year,
+                  mangaDetail.metadata.startDate.month,
+                  mangaDetail.metadata.startDate.day,
+                )
                 : undefined,
               endDate: mangaDetail.metadata.endDate
                 ? new Date(
-                    mangaDetail.metadata.endDate.year,
-                    mangaDetail.metadata.endDate.month,
-                    mangaDetail.metadata.endDate.day,
-                  )
+                  mangaDetail.metadata.endDate.year,
+                  mangaDetail.metadata.endDate.month,
+                  mangaDetail.metadata.endDate.day,
+                )
                 : undefined,
               status: mangaDetail.metadata.status,
               summary: mangaDetail.metadata.summary,
@@ -277,17 +279,17 @@ export const mangaRouter = t.router({
           genres: mangaDetail.metadata.genres,
           startDate: mangaDetail.metadata.startDate
             ? new Date(
-                mangaDetail.metadata.startDate.year,
-                mangaDetail.metadata.startDate.month,
-                mangaDetail.metadata.startDate.day,
-              )
+              mangaDetail.metadata.startDate.year,
+              mangaDetail.metadata.startDate.month,
+              mangaDetail.metadata.startDate.day,
+            )
             : undefined,
           endDate: mangaDetail.metadata.endDate
             ? new Date(
-                mangaDetail.metadata.endDate.year,
-                mangaDetail.metadata.endDate.month,
-                mangaDetail.metadata.endDate.day,
-              )
+              mangaDetail.metadata.endDate.year,
+              mangaDetail.metadata.endDate.month,
+              mangaDetail.metadata.endDate.day,
+            )
             : undefined,
           status: mangaDetail.metadata.status,
           summary: mangaDetail.metadata.summary,

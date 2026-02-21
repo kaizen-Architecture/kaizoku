@@ -16,13 +16,12 @@ const useStyles = createStyles((theme, { checked, disabled }: { checked: boolean
       alignItems: 'center',
       width: '100%',
       transition: 'background-color 150ms ease, border-color 150ms ease',
-      border: `1px solid ${
-        checked
-          ? theme.fn.variant({ variant: 'outline', color: theme.primaryColor }).border
-          : theme.colorScheme === 'dark'
+      border: `1px solid ${checked
+        ? theme.fn.variant({ variant: 'outline', color: theme.primaryColor }).border
+        : theme.colorScheme === 'dark'
           ? theme.colors.dark[8]
           : theme.colors.gray[3]
-      }`,
+        }`,
       borderRadius: theme.radius.sm,
       padding: theme.spacing.sm,
       backgroundColor,
@@ -43,6 +42,8 @@ interface ImageCheckboxProps {
   title: string;
   description: string;
   image: string;
+  source: string;
+  chapters: number;
 }
 
 export function ImageCheckbox({
@@ -54,6 +55,8 @@ export function ImageCheckbox({
   className,
   disabled,
   image,
+  source,
+  chapters,
   ...others
 }: ImageCheckboxProps & Omit<React.ComponentPropsWithoutRef<'button'>, keyof ImageCheckboxProps>) {
   const [value, handleChange] = useUncontrolled({
@@ -85,7 +88,7 @@ export function ImageCheckbox({
 
       <div className={classes.body}>
         <Text color="dimmed" size="xs" sx={{ lineHeight: 1 }} mb={5}>
-          {description}
+          {description} • {source} • {chapters} chapters
         </Text>
         <Text weight={500} size="sm" sx={{ lineHeight: 1 }}>
           {title}
@@ -98,13 +101,15 @@ export function ImageCheckbox({
 ImageCheckbox.defaultProps = {
   checked: undefined,
   defaultChecked: undefined,
-  onChange: () => {},
+  onChange: () => { },
 };
 
 type IMangaSearchResult = {
   status: string;
   title: string;
   cover: string;
+  source: string;
+  chapters: number;
 };
 
 export function MangaSearchResult({
@@ -136,6 +141,8 @@ export function MangaSearchResult({
             title={m.title}
             disabled={selected && m.title !== selected.title}
             description={m.status}
+            source={m.source}
+            chapters={m.chapters}
             onChange={(checked) => {
               if (checked) {
                 setSelected(m);
